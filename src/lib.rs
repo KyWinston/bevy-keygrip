@@ -5,6 +5,7 @@ use systems::{focus_cameras, update_active};
 pub mod components;
 pub mod events;
 pub mod systems;
+pub mod camera;
 pub struct KeyGripPlugin;
 
 impl Plugin for KeyGripPlugin {

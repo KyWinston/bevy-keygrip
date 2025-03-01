@@ -438,6 +438,7 @@ dependencies = [
  "bevy 0.15.0-rc.3",
  "bevy-inspector-egui",
  "bevy_third_person_camera",
+ "cfg-if",
 ]
 
 [[package]]

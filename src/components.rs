@@ -1,7 +1,11 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct PlayerCamera;
+#[derive(Component, Default)]
+#[require(Camera)]
+pub struct PlayerCamera {
+   pub  offset: Vec2,
+   pub  tracking: f32,
+}
 
 #[derive(Component)]
 pub struct KeyGrip;
