@@ -8,8 +8,8 @@ pub struct FollowCameraPlugin;
 impl Plugin for FollowCameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            Update,
-            (update_camera_position, update_camera_rotation).chain()
+            PostUpdate,
+            (update_camera_position, update_camera_rotation)
                 .after(TransformSystem::TransformPropagate),
         );
     }
