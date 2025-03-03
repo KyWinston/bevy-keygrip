@@ -15,7 +15,7 @@ pub fn update_camera_position(
                 + *t.back() * grip.location_offset.z
                 + *t.up() * grip.location_offset.y;
             if delta != Vec3::ZERO {
-                transform.translation += delta * grip.tracking.0 * time.delta_secs();
+                transform.translation += delta * grip.tracking.0;
             }
         }
     }
