@@ -7,6 +7,7 @@ use super::components::{CameraDriver, PlayerCamera};
 pub fn update_camera_position(
     mut cam: Query<(&mut Transform, &Grip), With<PlayerCamera>>,
     target: Query<&GlobalTransform, With<CameraDriver>>,
+    time: Res<Time>
 ) {
     if let Ok((mut transform, grip)) = cam.get_single_mut() {
         if let Ok(t) = target.get_single() {
@@ -14,7 +15,7 @@ pub fn update_camera_position(
                 + *t.back() * grip.location_offset.z
                 + *t.up() * grip.location_offset.y;
             if delta != Vec3::ZERO {
-                transform.translation += delta * grip.tracking.0;
+                transform.translation += delta * grip.tracking.0 * time.delta_secs();
             }
         }
     }
