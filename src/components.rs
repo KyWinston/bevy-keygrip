@@ -17,6 +17,9 @@ pub struct Grip {
     pub location_offset: Vec3,
     pub rotation_offset: Vec3,
     pub tracking: (f32, f32),
+    pub near: f32,
+    pub far: f32,
+    pub smoothing_curve: EaseFunction,
 }
 
 impl Default for Grip {
@@ -26,6 +29,9 @@ impl Default for Grip {
             location_offset: Vec3::ZERO,
             rotation_offset: Vec3::ZERO,
             tracking: (1.0, 1.0),
+            near: 0.0,
+            far: 30.0,
+            smoothing_curve: EaseFunction::Linear,
         }
     }
 }

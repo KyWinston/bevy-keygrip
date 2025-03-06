@@ -10,10 +10,16 @@ pub fn update_camera_position(
 ) {
     if let Ok((mut transform, grip)) = cam.get_single_mut() {
         if let Ok(t) = target.get_single() {
+            let distance = transform.translation.distance(t.translation());
             let future_position = t.translation()
                 + *t.back() * grip.location_offset.z
                 + *t.up() * grip.location_offset.y;
-            transform.translation = transform.translation.lerp(future_position, grip.tracking.0);
+            transform.translation = transform.translation.lerp(
+                future_position,
+                EasingCurve::new(grip.near, grip.far, grip.smoothing_curve)
+                    .sample(distance * grip.tracking.0)
+                    .unwrap_or(0.0),
+            );
         }
     }
 }
