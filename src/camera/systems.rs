@@ -16,8 +16,8 @@ pub fn update_camera_position(
                 + *t.up() * grip.location_offset.y;
             transform.translation = transform.translation.lerp(
                 future_position,
-                EasingCurve::new(grip.near, grip.far, grip.smoothing_curve)
-                    .sample(distance * grip.tracking.0)
+                EasingCurve::new(0.2, 1.0, grip.smoothing_curve)
+                    .sample(grip.tracking.0)
                     .unwrap_or(0.0),
             );
         }
