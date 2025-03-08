@@ -30,7 +30,7 @@ pub fn update_camera_rotation(
         if let Ok((t, t_transform)) = target.get(**parent) {
             let rotation = transform
                 .looking_at(
-                    t_transform.translation + t_transform.up() * grip.rotation_offset.y,
+                    transform.translation + grip.rotation_offset.y,
                     t_transform.up(),
                 )
                 .rotation;
