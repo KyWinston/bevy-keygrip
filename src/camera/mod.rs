@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use systems::{update_camera_position, update_camera_rotation};
+use systems::{connect_player_cam, update_camera_position, update_camera_rotation};
 
 pub mod components;
 pub mod systems;
@@ -11,6 +11,7 @@ impl Plugin for FollowCameraPlugin {
             PostUpdate,
             (update_camera_position, update_camera_rotation)
                 .before(TransformSystem::TransformPropagate),
-        );
+        )
+        .add_observer(connect_player_cam);
     }
 }

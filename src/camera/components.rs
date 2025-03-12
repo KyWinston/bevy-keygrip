@@ -1,9 +1,7 @@
-use crate::components::Grip;
 use bevy::prelude::*;
 
-#[derive(Component, Default)]
-#[require(Grip)]
-pub struct PlayerCamera;
+#[derive(Component)]
+pub struct PlayerCamera(pub Entity);
 
 #[derive(Component)]
 pub struct CameraDriver;
