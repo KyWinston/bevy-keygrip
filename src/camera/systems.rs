@@ -6,23 +6,15 @@ pub fn connect_player_cam(
     trigger: Trigger<OnAdd, CameraDriver>,
     mut commands: Commands,
     driver: Query<&Transform, With<CameraDriver>>,
-    cam: Query<Entity, With<PlayerCamera>>,
+    cam: Query<(Entity, &Grip), With<PlayerCamera>>,
 ) {
-    let driver_poition = driver.get(trigger.entity()).unwrap().translation;
+    println!("add driver");
+    let driver_position = driver.get(trigger.entity()).unwrap().translation;
     let cam = commands
-        .entity(cam.single())
+        .entity(cam.single().0)
         .insert((
-            Grip {
-                location_offset: Vec3::new(0.0, 2.0, 7.0),
-                rotation_offset: Vec3::ZERO,
-                tracking: (1.0, 1.0),
-                near: 1.0,
-                far: 15.0,
-                smoothing_curve: EaseFunction::QuadraticIn,
-                ..default()
-            },
-            Transform::from_translation(driver_poition + Vec3::new(0.0, 2.0, 7.0))
-                .looking_at(driver_poition, Vec3::Y),
+            Transform::from_translation(driver_position + cam.single().1.location_offset)
+                .looking_at(driver_position + cam.single().1.rotation_offset, Vec3::Y),
         ))
         .id();
     commands.entity(trigger.entity()).add_child(cam);
