@@ -4,9 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.16.0-rc.1", default-features = false, features = [
-    "bevy_core_pipeline",
-] }
+bevy = { version = "0.16.0-rc.1" }
 
 bevy_third_person_camera = { git = "https://github.com/KyWinston/bevy_third_person_camera", branch = "migration-15", optional = true }
 cfg-if = "1.0.0"
@@ -21,7 +19,7 @@ bevy = { version = "0.16.0-rc.1", default-features = false, features = [
 
 [features]
 third_person = ["dep:bevy_third_person_camera"]
-debug = ["bevy/bevy_gizmos", "dep:bevy-inspector-egui"]
+# debug = ["bevy/bevy_gizmos", "dep:bevy-inspector-egui"]
 
 [target.'cfg(target_os = "linux")'.dev-dependencies.bevy]
 version = "0.16.0-rc.1"
