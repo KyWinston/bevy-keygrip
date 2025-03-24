@@ -9,23 +9,26 @@ pub fn connect_player_cam(
     cam: Query<(Entity, &Grip), With<PlayerCamera>>,
 ) {
     println!("add driver");
-    let driver_position = driver.get(trigger.entity()).unwrap().translation;
+    let driver_position = driver.get(trigger.target()).unwrap().translation;
     let cam = commands
-        .entity(cam.single().0)
-        .insert((
-            Transform::from_translation(driver_position + cam.single().1.location_offset)
-                .looking_at(driver_position + cam.single().1.rotation_offset, Vec3::Y),
-        ))
+        .entity(cam.single().expect("camera not found").0)
+        .insert((Transform::from_translation(
+            driver_position + cam.single().expect("no camera found").1.location_offset,
+        )
+        .looking_at(
+            driver_position + cam.single().expect("no camera found").1.rotation_offset,
+            Vec3::Y,
+        ),))
         .id();
-    commands.entity(trigger.entity()).add_child(cam);
+    commands.entity(trigger.target()).add_child(cam);
 }
 
 pub fn update_camera_position(
-    mut cam: Query<(&mut Transform, &Parent, &Grip), With<CameraDriver>>,
+    mut cam: Query<(&mut Transform, &ChildOf, &Grip), With<CameraDriver>>,
     target: Query<(Entity, &Transform), Without<CameraDriver>>,
 ) {
-    if let Ok((mut transform, parent, grip)) = cam.get_single_mut() {
-        if let Ok(_) = target.get(**parent) {
+    if let Ok((mut transform, child_of, grip)) = cam.single_mut() {
+        if let Ok(_) = target.get(child_of.parent) {
             let future_position = grip.location_offset;
 
             transform.translation = transform.translation.lerp(
@@ -39,11 +42,11 @@ pub fn update_camera_position(
 }
 
 pub fn update_camera_rotation(
-    mut cam: Query<(&mut Transform, &Parent, &Grip), With<CameraDriver>>,
+    mut cam: Query<(&mut Transform, &ChildOf, &Grip), With<CameraDriver>>,
     target: Query<(Entity, &Transform), Without<CameraDriver>>,
 ) {
-    if let Ok((mut transform, parent, grip)) = cam.get_single_mut() {
-        if let Ok((_t, t_transform)) = target.get(**parent) {
+    if let Ok((mut transform, child_of, grip)) = cam.single_mut() {
+        if let Ok((_t, t_transform)) = target.get(child_of.parent) {
             let rotation = transform
                 .looking_at(
                     transform.translation + grip.rotation_offset.y,
