@@ -21,8 +21,8 @@ pub fn connect_player_cam(
 }
 
 pub fn update_camera_position(
-    mut cam: Query<(&mut Transform, &Parent, &Grip), With<CameraDriver>>,
-    target: Query<(Entity, &Transform), Without<CameraDriver>>,
+    mut cam: Query<(&mut Transform, &Parent, &Grip), With<PlayerCamera>>,
+    target: Query<(Entity, &Transform), With<CameraDriver>>,
 ) {
     if let Ok((mut transform, parent, grip)) = cam.get_single_mut() {
         if let Ok(_) = target.get(**parent) {
@@ -39,8 +39,8 @@ pub fn update_camera_position(
 }
 
 pub fn update_camera_rotation(
-    mut cam: Query<(&mut Transform, &Parent, &Grip), With<CameraDriver>>,
-    target: Query<(Entity, &Transform), Without<CameraDriver>>,
+    mut cam: Query<(&mut Transform, &Parent, &Grip), With<PlayerCamera>>,
+    target: Query<(Entity, &Transform), With<CameraDriver>>,
 ) {
     if let Ok((mut transform, parent, grip)) = cam.get_single_mut() {
         if let Ok((_t, t_transform)) = target.get(**parent) {
