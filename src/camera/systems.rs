@@ -8,18 +8,20 @@ pub fn connect_player_cam(
     driver: Query<&Transform, With<CameraDriver>>,
     cam: Query<(Entity, &Grip), With<PlayerCamera>>,
 ) {
-    println!("add driver");
-    let driver_position = driver.get(trigger.entity()).unwrap().translation;
-    let cam = commands
-        .entity(cam.single().0)
-        .insert((
-            Transform::from_translation(driver_position + cam.single().1.location_offset)
-                .looking_at(driver_position + cam.single().1.rotation_offset, Vec3::Y),
-        ))
-        .id();
-    commands.entity(trigger.entity()).add_child(cam);
+    if let Ok(driver_position) = driver.get(trigger.entity()) {
+        let cam = commands
+            .entity(cam.single().0)
+            .insert((Transform::from_translation(
+                driver_position.translation + cam.single().1.location_offset,
+            )
+            .looking_at(
+                driver_position.translation + cam.single().1.rotation_offset,
+                Vec3::Y,
+            ),))
+            .id();
+        commands.entity(trigger.entity()).add_child(cam);
+    }
 }
-
 pub fn update_camera_position(
     mut cam: Query<(&mut Transform, &Parent, &Grip), With<PlayerCamera>>,
     target: Query<Entity, With<CameraDriver>>,
