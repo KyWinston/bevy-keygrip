@@ -29,10 +29,10 @@ pub fn update_camera_position(
     if let Ok((mut transform, parent, grip)) = cam.get_single_mut() {
         if let Ok(_) = target.get(**parent) {
             let future_position = grip.location_offset;
-            transform.translation = transform.translation.lerp(
-                future_position,
+            transform.translation.x = transform.translation.x.lerp(
+                future_position.x,
                 EasingCurve::new(0.3, 1.0, grip.smoothing_curve)
-                    .sample(grip.tracking.0)
+                    .sample(grip.tracking.0.x)
                     .unwrap_or(0.0),
             );
         }
@@ -51,8 +51,8 @@ pub fn update_camera_rotation(
                     t_transform.up(),
                 )
                 .rotation;
-            if transform.rotation != rotation {
-                transform.rotation = transform.rotation.lerp(rotation, grip.tracking.1);
+            if transform.rotation.x != rotation.x {
+                transform.rotation.x = transform.rotation.x.lerp(rotation.x, grip.tracking.1.x);
             }
         }
     }
