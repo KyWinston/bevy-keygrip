@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct PlayerCamera(pub Entity);
+pub struct PlayerCamera;
 
 #[derive(Component)]
 pub struct CameraDriver;
