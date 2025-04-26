@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.16.0-rc.3" }
+bevy = { version = "0.16.0" }
 
 bevy_third_person_camera = { git = "https://github.com/KyWinston/bevy_third_person_camera", branch = "migration-15", optional = true }
 cfg-if = "1.0.0"
@@ -12,7 +12,7 @@ cfg-if = "1.0.0"
 
 
 [dev-dependencies]
-bevy = { version = "0.16.0-rc.3", default-features = false, features = [
+bevy = { version = "0.16.0", default-features = false, features = [
     "bevy_core_pipeline",
     "tonemapping_luts",
 ] }
@@ -22,7 +22,7 @@ third_person = ["dep:bevy_third_person_camera"]
 # debug = ["bevy/bevy_gizmos", "dep:bevy-inspector-egui"]
 
 [target.'cfg(target_os = "linux")'.dev-dependencies.bevy]
-version = "0.16.0-rc.3"
+version = "0.16.0"
 features = ["x11", "wayland", "bevy_winit"]
 default-features = false
 

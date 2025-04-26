@@ -28,7 +28,7 @@ pub fn update_camera_position(
     target: Query<(Entity, &Transform), Without<CameraDriver>>,
 ) {
     if let Ok((mut transform, child_of, grip)) = cam.single_mut() {
-        if let Ok(_) = target.get(child_of.parent) {
+        if let Ok(_) = target.get(child_of.parent()) {
             let future_position = grip.location_offset;
 
             transform.translation.x = transform
@@ -67,7 +67,7 @@ pub fn update_camera_rotation(
     target: Query<(Entity, &Transform), Without<CameraDriver>>,
 ) {
     if let Ok((mut transform, child_of, grip)) = cam.single_mut() {
-        if let Ok((_t, t_transform)) = target.get(child_of.parent) {
+        if let Ok((_t, t_transform)) = target.get(child_of.parent()) {
             let rotation = transform
                 .looking_at(
                     transform.translation + grip.rotation_offset.y,
