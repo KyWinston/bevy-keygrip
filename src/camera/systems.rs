@@ -8,7 +8,6 @@ pub fn connect_player_cam(
     driver: Query<&Transform, With<CameraDriver>>,
     cam: Query<(Entity, &Grip), With<PlayerCamera>>,
 ) {
-    println!("add driver");
     let driver_position = driver.get(trigger.target()).unwrap().translation;
     let cam = commands
         .entity(cam.single().expect("camera not found").0)
