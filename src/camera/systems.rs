@@ -1,34 +1,14 @@
-use super::components::{CameraDriver, PlayerCamera};
+use super::components::CameraDriver;
 use crate::components::Grip;
 use bevy::prelude::*;
 
-pub fn connect_player_cam(
-    trigger: Trigger<OnAdd, CameraDriver>,
-    mut commands: Commands,
-    driver: Query<&Transform, With<CameraDriver>>,
-    cam: Query<(Entity, &Grip), With<PlayerCamera>>,
-) {
-    let driver_position = driver.get(trigger.target()).unwrap().translation;
-    println!("driver added");
-    let cam = commands
-        .entity(cam.single().expect("camera not found").0)
-        .insert((Transform::from_translation(
-            driver_position + cam.single().expect("no camera found").1.location_offset,
-        )
-        .looking_at(
-            driver_position + cam.single().expect("no camera found").1.rotation_offset,
-            Vec3::Y,
-        ),))
-        .id();
-    commands.entity(trigger.target()).add_child(cam);
-}
 pub fn update_camera_position(
-    mut cam: Query<(&mut Transform, &ChildOf, &Grip), With<CameraDriver>>,
-    target: Query<(Entity, &Transform), Without<CameraDriver>>,
+    mut cam: Query<(&mut Transform, &Grip), Without<CameraDriver>>,
+    target: Query<&GlobalTransform, With<CameraDriver>>,
 ) {
-    if let Ok((mut transform, child_of, grip)) = cam.single_mut() {
-        if let Ok(_) = target.get(child_of.parent()) {
-            let future_position = grip.location_offset;
+    if let Ok((mut transform, grip)) = cam.single_mut() {
+        if let Ok(target_transform) = target.single() {
+            let future_position = target_transform.translation() + grip.location_offset;
 
             transform.translation.x = transform
                 .translation
@@ -62,22 +42,20 @@ pub fn update_camera_position(
 }
 
 pub fn update_camera_rotation(
-    mut cam: Query<(&mut Transform, &ChildOf, &Grip), With<CameraDriver>>,
-    target: Query<(Entity, &Transform), Without<CameraDriver>>,
+    mut cam: Query<(&mut Transform, &Grip), Without<CameraDriver>>,
+    target: Query<(Entity, &GlobalTransform), With<CameraDriver>>,
 ) {
-    if let Ok((mut transform, child_of, grip)) = cam.single_mut() {
-        if let Ok((_t, t_transform)) = target.get(child_of.parent()) {
-            let rotation = transform
+    if let Ok((mut transform, grip)) = cam.single_mut() {
+        if let Ok((_t, t_transform)) = target.single() {
+            let t_rotation = transform
                 .looking_at(
-                    transform.translation + grip.rotation_offset.y,
+                    t_transform.translation() + grip.rotation_offset.y,
                     t_transform.up(),
                 )
                 .rotation;
-            if transform.rotation != rotation {
-                transform.rotation.x = transform.rotation.lerp(rotation, grip.tracking.1.x).x;
-                transform.rotation.y = transform.rotation.lerp(rotation, grip.tracking.1.y).y;
-                transform.rotation.z = transform.rotation.lerp(rotation, grip.tracking.1.z).z;
-            }
+            transform.rotation.x = transform.rotation.slerp(t_rotation, grip.tracking.1.x).x;
+            transform.rotation.y = transform.rotation.slerp(t_rotation, grip.tracking.1.y).y;
+            transform.rotation.z = transform.rotation.slerp(t_rotation, grip.tracking.1.z).z;
         }
     }
 }
